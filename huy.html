@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BẢNG THEO DÕI HẠNH KIỂM — Lớp 7A6</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,560;9..144,650&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #efe8dc;
+      --sheet: #fbf7f0;
+      --ink: #1a1714;
+      --muted: #6f675e;
+      --line: #d8cec0;
+      --accent: #1e4a3c;
+      --gold: #b0894d;
+      --tot: #0b6e3a; --tot-fg: #f3fff7; --tot-bg: #0b6e3a;
+      --kha: #0e4f8c; --kha-fg: #f2f7ff; --kha-bg: #0e4f8c;
+      --tb: #b45c00; --tb-fg: #fff8ee; --tb-bg: #b45c00;
+      --yeu: #b91c1c; --yeu-fg: #fff5f4; --yeu-bg: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: "Be Vietnam Pro", system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(900px 420px at 12% -10%, rgba(176,137,77,.16), transparent 60%),
+        radial-gradient(700px 380px at 100% 0%, rgba(30,74,60,.08), transparent 55%);
+    }
+    .wrap { position: relative; max-width: 980px; margin: 0 auto; padding: 28px 16px 64px; }
+    .toolbar {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      margin-bottom: 18px;
+    }
+    .toolbar button {
+      font: inherit; font-size: 13px; font-weight: 600;
+      border: 1px solid transparent; border-radius: 999px;
+      padding: 10px 16px; cursor: pointer; min-height: 42px;
+    }
+    .toolbar .primary { background: var(--accent); color: #fbf7f0; }
+    .toolbar .ghost { background: #fbf7f0; color: var(--ink); border-color: #d8cec0; }
+    .sheet {
+      background: var(--sheet);
+      border-radius: 20px;
+      padding: 36px 36px 28px;
+      box-shadow:
+        0 0 0 1px rgba(26,23,20,.06),
+        0 18px 50px -24px rgba(26,23,20,.35);
+    }
+    .head { text-align: center; margin-bottom: 22px; }
+    .kicker {
+      font-size: 11px; font-weight: 600; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--gold); margin: 0 0 8px;
+    }
+    h1 {
+      font-family: Fraunces, "Times New Roman", serif;
+      font-size: clamp(1.6rem, 3vw, 2.15rem);
+      font-weight: 650; letter-spacing: -.02em;
+      margin: 0; line-height: 1.15; text-wrap: balance;
+    }
+    .rule {
+      width: 72px; height: 2px; margin: 14px auto 16px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border: 0;
+    }
+    .meta {
+      display: flex; justify-content: center; gap: 28px; flex-wrap: wrap;
+      font-size: 14px; color: var(--muted);
+    }
+    .meta b { color: var(--ink); font-weight: 600; }
+    .meta span[contenteditable] { outline: none; border-bottom: 1px dashed transparent; }
+    .meta span[contenteditable]:hover, .meta span[contenteditable]:focus {
+      border-bottom-color: var(--gold);
+    }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    thead th {
+      background: var(--accent); color: #f4eee4;
+      font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; text-align: left;
+      padding: 11px 12px;
+    }
+    thead th:first-child { border-radius: 10px 0 0 0; width: 52px; text-align: center; }
+    thead th:nth-child(2) { width: 32%; }
+    thead th:nth-child(4) { width: 210px; }
+    thead th:last-child { border-radius: 0 10px 0 0; width: 42px; }
+    tbody td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 10px; vertical-align: middle;
+      font-size: 14px;
+    }
+    tbody tr:nth-child(even) td { background: rgba(30,74,60,.035); }
+    tbody tr:hover td { background: rgba(176,137,77,.08); }
+    .stt { text-align: center; font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 600; width: 52px; }
+    .cell { min-height: 28px; outline: none; border-radius: 6px; padding: 4px 6px; }
+    .cell:empty::before { content: attr(data-placeholder); color: #b3aa9e; }
+    .cell:focus { background: #fff; box-shadow: 0 0 0 2px rgba(30,74,60,.18); }
+    .chips { display: flex; flex-wrap: nowrap; gap: 4px; }
+    .chip {
+      font: inherit; font-size: 11px; font-weight: 700; white-space: nowrap;
+      border: 1px solid transparent; border-radius: 999px;
+      padding: 5px 10px; cursor: pointer; background: transparent; color: var(--muted);
+    }
+    .chip.tot.on { background: var(--tot-bg); color: var(--tot-fg); }
+    .chip.kha.on { background: var(--kha-bg); color: var(--kha-fg); }
+    .chip.tb.on { background: var(--tb-bg); color: var(--tb-fg); }
+    .chip.yeu.on { background: var(--yeu-bg); color: var(--yeu-fg); }
+    .chip:not(.on):hover { background: rgba(26,23,20,.05); }
+    .icon-btn {
+      width: 28px; height: 28px; border: 0; background: transparent;
+      color: #b3aa9e; font-size: 18px; cursor: pointer; border-radius: 8px;
+    }
+    .icon-btn:hover { background: rgba(185,28,28,.14); color: var(--yeu); }
+    .foot {
+      display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+      margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line);
+      font-size: 13px; color: var(--muted);
+    }
+    .pill { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+    .dot { width: 8px; height: 8px; border-radius: 99px; }
+    .dot.tot { background: var(--tot); } .dot.kha { background: var(--kha); }
+    .dot.tb { background: var(--tb); } .dot.yeu { background: var(--yeu); }
+    .hint { margin-left: auto; font-size: 12px; }
+    @media (max-width: 720px) {
+      .sheet { padding: 22px 14px 18px; border-radius: 14px; }
+      thead th:nth-child(4), .rank-cell { width: 78px; }
+      .chip:not(.on) { display: none; }
+      .meta { gap: 12px 18px; }
+      .hint { margin-left: 0; width: 100%; }
+    }
+    @media print {
+      @page { size: A4 portrait; margin: 12mm; }
+      body { background: #fff; }
+      body::before, .toolbar, .act, thead th:last-child, .hint { display: none !important; }
+      .wrap { max-width: none; padding: 0; }
+      .sheet { box-shadow: none; padding: 0; border-radius: 0; }
+      .chip:not(.on) { display: none; }
+      tbody tr:hover td { background: transparent; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="toolbar">
+      <button type="button" class="primary" id="add">Thêm học sinh</button>
+      <button type="button" class="ghost" id="print">In bảng</button>
+      <button type="button" class="ghost" id="blank">Bảng trống</button>
+    </div>
+    <article class="sheet">
+      <header class="head">
+        <p class="kicker">Năm học <span contenteditable="true" id="year">2025–2026</span></p>
+        <h1 contenteditable="true" id="title">BẢNG THEO DÕI HẠNH KIỂM</h1>
+        <hr class="rule" />
+        <div class="meta">
+          <div>Lớp <b contenteditable="true" id="klass">7A6</b></div>
+          <div>Giáo viên chủ nhiệm <b contenteditable="true" id="teacher">Kim Nhung</b></div>
+        </div>
+      </header>
+      <table>
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Họ và tên</th>
+            <th>Mắc lỗi</th>
+            <th>Hạnh kiểm</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="body">
+          <tr data-id="s1">
+        <td class="stt">1</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Nguyễn Thị Ánh</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi"></div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot on" data-rank="tot" data-id="s1">Tốt</button><button type="button" class="chip kha" data-rank="kha" data-id="s1">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s1">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s1">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s2">
+        <td class="stt">2</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Trần Văn Bảo</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi">Đi học muộn</div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot" data-rank="tot" data-id="s2">Tốt</button><button type="button" class="chip kha on" data-rank="kha" data-id="s2">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s2">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s2">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s3">
+        <td class="stt">3</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Lê Thị Cúc</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi"></div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot on" data-rank="tot" data-id="s3">Tốt</button><button type="button" class="chip kha" data-rank="kha" data-id="s3">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s3">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s3">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s4">
+        <td class="stt">4</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Phạm Minh Đức</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi">Nói chuyện trong giờ</div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot" data-rank="tot" data-id="s4">Tốt</button><button type="button" class="chip kha" data-rank="kha" data-id="s4">Khá</button><button type="button" class="chip tb on" data-rank="tb" data-id="s4">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s4">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s5">
+        <td class="stt">5</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Hoàng Thị Hoa</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi"></div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot on" data-rank="tot" data-id="s5">Tốt</button><button type="button" class="chip kha" data-rank="kha" data-id="s5">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s5">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s5">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s6">
+        <td class="stt">6</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Vũ Quốc Huy</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi"></div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot" data-rank="tot" data-id="s6">Tốt</button><button type="button" class="chip kha on" data-rank="kha" data-id="s6">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s6">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s6">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s7">
+        <td class="stt">7</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Đặng Thị Hương</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi"></div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot on" data-rank="tot" data-id="s7">Tốt</button><button type="button" class="chip kha" data-rank="kha" data-id="s7">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s7">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s7">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s8">
+        <td class="stt">8</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Bùi Văn Khoa</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi">Không làm bài tập</div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot" data-rank="tot" data-id="s8">Tốt</button><button type="button" class="chip kha on" data-rank="kha" data-id="s8">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s8">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s8">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s9">
+        <td class="stt">9</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Ngô Thị Lan</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi"></div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot on" data-rank="tot" data-id="s9">Tốt</button><button type="button" class="chip kha" data-rank="kha" data-id="s9">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s9">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s9">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s10">
+        <td class="stt">10</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Đỗ Minh Nhật</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi"></div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot on" data-rank="tot" data-id="s10">Tốt</button><button type="button" class="chip kha" data-rank="kha" data-id="s10">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s10">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s10">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+<tr data-id="s11">
+        <td class="stt">11</td>
+        <td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên">Trịnh Thị Oanh</div></td>
+        <td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi"></div></td>
+        <td class="rank-cell"><div class="chips"><button type="button" class="chip tot" data-rank="tot" data-id="s11">Tốt</button><button type="button" class="chip kha on" data-rank="kha" data-id="s11">Khá</button><button type="button" class="chip tb" data-rank="tb" data-id="s11">TB</button><button type="button" class="chip yeu" data-rank="yeu" data-id="s11">Yếu</button></div></td>
+        <td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>
+      </tr>
+        </tbody>
+      </table>
+      <footer class="foot">
+        <span>Sĩ số <b id="total">11</b></span>
+        <span class="pill"><i class="dot tot"></i>Tốt <b id="c-tot">6</b></span>
+        <span class="pill"><i class="dot kha"></i>Khá <b id="c-kha">4</b></span>
+        <span class="pill"><i class="dot tb"></i>TB <b id="c-tb">1</b></span>
+        <span class="pill"><i class="dot yeu"></i>Yếu <b id="c-yeu">0</b></span>
+        <span class="hint">Bấm tem màu để đổi xếp loại · ô chữ có thể sửa</span>
+      </footer>
+    </article>
+  </div>
+  <script>
+    const ranks = ["tot","kha","tb","yeu"];
+    const labels = { tot: "Tốt", kha: "Khá", tb: "TB", yeu: "Yếu" };
+    const body = document.getElementById("body");
+
+    function renumber() {
+      [...body.querySelectorAll("tr")].forEach((tr, i) => {
+        tr.querySelector(".stt").textContent = String(i + 1);
+      });
+      const counts = { tot:0, kha:0, tb:0, yeu:0 };
+      body.querySelectorAll(".chip.on").forEach((c) => counts[c.dataset.rank]++);
+      document.getElementById("total").textContent = body.querySelectorAll("tr").length;
+      ranks.forEach((r) => document.getElementById("c-" + r).textContent = counts[r]);
+    }
+
+    function rowTemplate() {
+      const id = "s-" + Date.now() + "-" + Math.random().toString(36).slice(2,6);
+      const chips = ranks.map((r) =>
+        '<button type="button" class="chip ' + r + (r === "tot" ? " on" : "") + '" data-rank="' + r + '" data-id="' + id + '">' + labels[r] + "</button>"
+      ).join("");
+      const tr = document.createElement("tr");
+      tr.dataset.id = id;
+      tr.innerHTML = '<td class="stt"></td>' +
+        '<td><div class="cell" contenteditable="true" data-field="name" data-placeholder="Họ và tên"></div></td>' +
+        '<td><div class="cell" contenteditable="true" data-field="note" data-placeholder="Ghi chú mắc lỗi"></div></td>' +
+        '<td class="rank-cell"><div class="chips">' + chips + "</div></td>" +
+        '<td class="act"><button type="button" class="icon-btn del" title="Xóa dòng">×</button></td>';
+      return tr;
+    }
+
+    body.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (chip) {
+        const chips = [...chip.parentElement.querySelectorAll(".chip")];
+        if (chip.classList.contains("on")) {
+          const i = chips.indexOf(chip);
+          chips.forEach((c) => c.classList.remove("on"));
+          chips[(i + 1) % chips.length].classList.add("on");
+        } else {
+          chips.forEach((c) => c.classList.remove("on"));
+          chip.classList.add("on");
+        }
+        renumber();
+        return;
+      }
+      const del = e.target.closest(".del");
+      if (del) {
+        del.closest("tr").remove();
+        renumber();
+      }
+    });
+
+    document.getElementById("add").onclick = () => { body.appendChild(rowTemplate()); renumber(); };
+    document.getElementById("print").onclick = () => window.print();
+    document.getElementById("blank").onclick = () => {
+      body.innerHTML = "";
+      for (let i = 0; i < 11; i++) body.appendChild(rowTemplate());
+      renumber();
+    };
+  </script>
+</body>
+</html>
